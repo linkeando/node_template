@@ -1,0 +1,160 @@
+paths:
+  /user:
+    get:
+      summary: Obtener todos los usuarios
+      tags:
+        - Usuarios
+      responses:
+        '200':
+          description: Lista de usuarios obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '404':
+          description: No se encontraron usuarios
+
+    post:
+      summary: Crear un nuevo usuario
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Usuario creado correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Error al procesar la solicitud
+
+  /user/{id}:
+    get:
+      summary: Obtener un usuario por ID
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID del usuario
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Usuario obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: No se encontró el usuario con el ID proporcionado
+
+    put:
+      summary: Actualizar un usuario existente
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID del usuario
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserWithoutID'  # Usar un esquema sin el ID del usuario
+      responses:
+        '204':
+          description: Usuario actualizado correctamente
+        '404':
+          description: No se encontró el usuario con el ID proporcionado
+
+
+    delete:
+      summary: Eliminar un usuario existente
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID del usuario
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Usuario eliminado correctamente
+        '404':
+          description: No se encontró el usuario con el ID proporcionado
+
+  /user/email/{email}:
+    get:
+      summary: Obtener un usuario por correo electrónico
+      tags:
+        - Usuarios
+      parameters:
+        - in: path
+          name: email
+          required: true
+          description: Correo electrónico del usuario
+          schema:
+            type: string
+            format: email
+      responses:
+        '200':
+          description: Usuario obtenido correctamente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: No se encontró el usuario con el correo electrónico proporcionado
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID del usuario
+        username:
+          type: string
+          description: Nombre de usuario
+        email:
+          type: string
+          format: email
+          description: Correo electrónico del usuario
+        age:
+          type: integer
+          description: Edad del usuario
+
+    UserWithoutID:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Nombre de usuario
+        email:
+          type: string
+          format: email
+          description: Correo electrónico del usuario
+        age:
+          type: integer
+          description: Edad del usuario
